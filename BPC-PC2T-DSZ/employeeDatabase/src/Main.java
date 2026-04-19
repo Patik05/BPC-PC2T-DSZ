@@ -3,10 +3,50 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+interface Skill {
+    void executeSkill();
+}
+
+abstract class StaffMember {
+    private int id;
+    private String name;
+
+    public StaffMember(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public int getId() { return id; }
+    public String getName() { return name; }
+
+    public abstract String getPosition();
+
+    public String toJson() {
+        return "{\"id\":" + id + ", \"name\":\"" + name + "\", \"role\":\"" + getPosition() + "\"}";
+    }
+}
+
+class Specialist extends StaffMember implements Skill {
+    public Specialist(int id, String name) {
+        super(id, name);
+    }
+
+    @Override
+    public String getPosition() {
+        return "Specialist";
+    }
+
+    @Override
+    public void executeSkill() {
+        System.out.println("Analyzing security for: " + getName());
+    }
+}
+
 public class Main {
     private static final String FILE_NAME = "data.json";
+    List<Specialist> employees = new ArrayList<>();
     static boolean running = true;
-    static boolean dummy = false;
+    static boolean unspecifiedChoice = false;
     static int loop = 0;
     static Scanner sc = new Scanner(System.in);
 
@@ -26,9 +66,9 @@ public class Main {
             System.out.println("9. Exit the app");
             System.out.println(" \n");
     
-            if(dummy){
+            if(unspecifiedChoice){
                 System.out.println("Selected choice not available, try again!");
-                dummy = false;
+                unspecifiedChoice = false;
             }
 
             System.out.println("Enter your choice (simple numbers): ");
@@ -44,7 +84,7 @@ public class Main {
                         running = false;
                         break;
                     default:
-                        dummy=true;
+                        unspecifiedChoice=true;
                         break;
                     }
                 menuSelection = null;
