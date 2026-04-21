@@ -1,27 +1,22 @@
-1. Projekt vypracujte ve dvojici, v případě kdy dvojice nechodí na stejná počítačová cvičení o tom informujte vyučující daných cvičení.
-2. Každá dvojice si vytvoří veřejný repozitár na githubu, kam výsledný projekt uloží.
-3. Na stránkách předmětu v Elearningu najdete formulář k registraci projektu - vyplníte informace o řešitelích a vyberete počítačová cviření, která navštěvujete, a zadáte odkaz na repozitář na Githubu
-4. Projekt se vypracovává v programovém prostředí Eclipse (pokud se s cvičícím nedomluvíte jinak)
 5. Termín odevzdání projektu je 5.5.2026 do 23:59, poté budou projekty z githubu staženy a porovnány SW pro detekci vzájemného o plagiátorství
-6. Projekty se budou obhajovat ve 13. týdnu semestru (tj 7.5.) dle pokynů vyučujícího počítačového cvičení, která navštěvujete.
-7. Obhajoba bude probíhat, následovně: cvičící spustí kód stažený z Githubu, řešitelé mu jej stručně popíší a předvedou funkčnost, následuje prostor pro dotazy.
-8. Hodnocení závisí nejen na úrovni vypracování projektu, ale i na reakcích na dotazy vyučujícího. Je tak možné, že oba řešitelé dostanou rozdílné bodové hodnocení. Požadavek je, aby oba řešitelé rozuměli všem částem programu.
-9. Odevzdaný kód nesmí obsahovat žádný komentář. Pokud komentáře při psaní kódu používáte, je nutné je před odevzdáním odstranit.
-10. V rámci projektu je možné získat max 15 bodů. Vedle vlastní funkčnosti se hodnotí rovněž efektivita programu, tj. využití dovedností získaných v rámci kurzu BPC-PC2T (dědičnost, abstraktní třídy, rozhraní, dynamické datové struktury, apod.)
-11. V rámci řešení projektu stačí uvažovat pouze konzolový vstup-výstup.
-
 
 Databázový systém zaměstnanců
 
-Předpokládejme databázi zaměstnanců technologické firmy. Každý zaměstnanec má své
-identifikační číslo, jméno, příjmení a rok narození. Každý zaměstnanec si vede seznam
-spolupracovníků, kde u každého eviduje úroveň spolupráce (špatná, průměrná dobrá).
+Předpokládejme databázi zaměstnanců technologické firmy. Každý zaměstnanec má své:
+identifikační číslo,
+jméno,
+příjmení,
+rok narození. 
+
+Každý zaměstnanec si vede seznam spolupracovníků, kde u každého eviduje úroveň spolupráce (špatná, průměrná dobrá).
+
 Skupiny zaměstnanců
 a) Datoví analytici – dokážou určit, s kterých spolupracovníkem mají nejvíce společných
 spolupracovníků.
 b) Bezpečnostní specialisté – dokážou vyhodnotit rizikovost spolupráce na základě počtu
 spolupracovníků a průměrné kvality spolupráce a vypočítat rizikové skóre (vlastní
 algoritmus).
+
 Při přijetí do firmy je každý zaměstnanec zařazen do jedné skupiny a nelze jej později
 přesunout.
 Funkcionalita programu

@@ -1,0 +1,6 @@
+[
+  {"id":2, "role":"securitySpecialist", "name":"ana", "surname":"bela", "yearOfBirth":2000},
+  {"id":3, "role":"securitySpecialist", "name":"johny", "surname":"english", "yearOfBirth":2005},
+  {"id":4, "role":"securitySpecialist", "name":"aligator", "surname":"haaaaa", "yearOfBirth":1970},
+  {"id":1, "role":"dataAnalyst", "name":"Pepsi", "surname":"Man", "yearOfBirth":1990}
+]
