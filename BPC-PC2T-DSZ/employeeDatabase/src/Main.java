@@ -3,6 +3,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+enum Cooperationlevel{
+    good(1), average(2), bad(3);
+
+    private final int riskValue;
+    Cooperationlevel(int riskValue) { this.riskValue = riskValue; }
+    public int getRiskValue() { return riskValue; }
+}
+
+class Collaboration{
+    private int colleagueId;
+    private Cooperationlevel level;
+
+    public Collaboration(int colleagueId, Cooperationlevel level){
+        this.colleagueId =colleagueId;
+        this.level = level;
+    }
+    public int getColleagueId() { return colleagueId;}
+    public Cooperationlevel  getLevel() { return level; }
+
+}
+
 interface Skill {
     void executeSkill();
 }
@@ -13,6 +34,8 @@ abstract class StaffMember {
     private String name;
     private String surname;
     private int yearOfBirth;
+
+    protected List<Collaboration> collaborations = new ArrayList<>();
 
     public StaffMember(int id, int workGroup, String name,  String surname, int yearOfBirth) {
         this.id = id;
@@ -26,6 +49,16 @@ abstract class StaffMember {
     public String getName() { return name; }
     public String getSurname() { return surname; }
 
+    public void addCollaboration(int colleagueId, Cooperationlevel level){
+        collaborations.add(new Collaboration(colleagueId, level));
+        collaborations.removeIf(c -> c.getColleagueId() == colleagueId);
+        this.collaborations.add(new Collaboration(colleagueId, level));
+    }
+
+    public void removeCollaboration(int colleagueId){
+        this.collaborations.removeIf(c -> c.getColleagueId() == colleagueId);
+    }
+
     public abstract String getPosition();
 
     public String toJson() {
@@ -38,7 +71,7 @@ abstract class StaffMember {
     }
 
     public String toFormattedString() {
-        return "| " + id + " | " + name + " | " + surname + " | " + yearOfBirth + " |";
+        return "| " + id + " | " + name + " | " + surname + " | " + yearOfBirth + " |" + collaborations.size() + " |";
     }
 }
 
@@ -121,6 +154,29 @@ public class Main {
                         saveDataToFile();
                         break;
                     case "2":
+                        System.out.println("Enter first employee ID to add coleague: "); int firstId = sc.nextInt();
+                        System.out.println("Enter second employee ID to connect: "); int secondId = sc.nextInt();
+                        System.out.println("Level (1-Good, 2-Avg, 3-Bad): "); int l = sc.nextInt();
+                        sc.nextLine();
+
+                        Cooperationlevel lvl = (l == 1)? Cooperationlevel.good : (l==3 ? Cooperationlevel.bad :Cooperationlevel.average);
+
+                        Specialist firstemployee = null;
+                        Specialist secondemployee = null;
+                        for(Specialist s: employees){
+                            if(s.getId() == firstId) firstemployee = s;
+                            if(s.getId() == secondId) secondemployee = s;
+                        }
+
+                        if(firstemployee != null && secondemployee != null){
+                            firstemployee.addCollaboration(secondId, lvl);
+                            secondemployee.addCollaboration(firstId, lvl);
+                            System.out.println("Connection added.");
+                            saveDataToFile();
+                        }
+                        else{
+                            System.out.println("Connection failed");
+                        }
                         break;
                     case "3":
                         List<Specialist> sortedForDisplay = new ArrayList<>(employees);
@@ -139,6 +195,7 @@ public class Main {
                         sc.nextLine();
                         boolean removed = employees.removeIf(e -> e.getId() == removeId);
                         if(removed) {
+                            for(Specialist s: employees) s.removeCollaboration(removeId);
                             System.out.println("Employee removed.");
                             saveDataToFile();
                         } else {
