@@ -40,11 +40,28 @@ public abstract class StaffMember {
             "\", \"name\":\"" + name +
             "\", \"surname\":\"" + surname +
             "\", \"yearOfBirth\":" + yearOfBirth +
+            ", \"collaborationCount\":" + collaborations.size() +
             "}";
     }
 
     public String toFormattedString() {
         return "| " + id + " | " + name + " | " + surname + " | " + yearOfBirth + " |" + collaborations.size() + " |";
+    }
+    
+    public String collaborationToJson() {
+    	String json="";
+    	for (int i =0; i< collaborations.size(); i++) {
+    		Collaboration c = collaborations.get(i);
+    		
+    		json+="{\"staffId\":" + this.id +
+    			  ", \"colleagueId\":" + c.getColleagueId() +
+    			  ", \"level\":\"" + c.getLevel()+ "\"}";
+    		
+    		if (i<collaborations.size()- 1){
+    			json += ",\n";
+    		}
+    	}
+    	return json;
     }
 }
 
