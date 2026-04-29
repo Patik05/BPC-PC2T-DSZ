@@ -160,11 +160,11 @@ public class Main {
     }
 
     private static void saveDataToFile() {
-        try (FileWriter writer = new FileWriter(FILE_NAME)) {
+        try (FileWriter writer = new FileWriter("data.json")) {
             writer.write("[\n");
-            for(int i = 0; i < employees.size(); i++) {
+            for (int i = 0; i < employees.size(); i++) {
                 writer.write("  " + employees.get(i).toJson());
-                if(i < employees.size() - 1) {
+                if (i < employees.size() - 1) {
                     writer.write(",\n");
                 } else {
                     writer.write("\n");
@@ -174,10 +174,32 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        try (FileWriter writer = new FileWriter("collaborations.json")) {
+            writer.write("[\n");
+            
+        int posledniIndex = -1;
+        for (int i = 0; i < employees.size(); i++) {
+            	String collabJson = employees.get(i).collaborationToJson();
+            	
+                if (!collabJson.isEmpty()) {
+                	writer.write(collabJson);
+                }
+                if (i < posledniIndex) {
+                    writer.write(",\n");
+                } else {
+                    writer.write("\n");
+                }
+            }
+            writer.write("]");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
     }
 
     private static void loadDataFromFile() {
-        File file = new File(FILE_NAME);
+        File file = new File("data.json");
         if (!file.exists()) {
             return;
         }
@@ -189,14 +211,44 @@ public class Main {
                     String parsedRole = line.split("\"role\":\"")[1].split("\"")[0];
                     String parsedName = line.split("\"name\":\"")[1].split("\"")[0];
                     String parsedSurname = line.split("\"surname\":\"")[1].split("\"")[0];
-                    int parsedYearOfBirth = Integer.parseInt(line.split("\"yearOfBirth\":")[1].split("}")[0].trim());
+                    int parsedYearOfBirth = Integer.parseInt(line.split("\"yearOfBirth\":")[1].split(",")[0]);
+                    int parsedCount = Integer.parseInt(line.split("\"collaborationCount\":")[1].split("}")[0].trim());
                     
                     int wg = parsedRole.equals("dataAnalyst") ? 1 : 2;
-                    employees.add(new Specialist(parsedId, wg, parsedName, parsedSurname, parsedYearOfBirth));
+                    Specialist spec =new Specialist(parsedId, wg, parsedName, parsedSurname, parsedYearOfBirth);
+                    
+                    for(int i = 0; i < parsedCount; i++ ) {
+                    	spec.addCollaboration(-i, Cooperationlevel.AVERAGE);
+                    }
+                    employees.add(spec);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        File collabFile = new File("collaborations.json");
+        if (!collabFile.exists()) {
+            return;
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+            	if (line.contains("\"staffId\":")) {
+            		int parsedsId = Integer.parseInt(line.split("\"staffId\":")[1].split(",")[0].trim());
+            		int parsedcId = Integer.parseInt(line.split("\"colegueIdId\":")[1].split(",")[0].trim());
+            		String levelStr = line.split("\"level\":\"")[1].split(",")[0];
+            		
+            		Cooperationlevel level = Cooperationlevel.valueOf(levelStr);
+            		for (StaffMember e: employees) {
+            			if (e.getId()==parsedsId) {
+            				e.addCollaboration(parsedcId, level);
+            				break;
+            			}
+            		}
+            	}
+            }
+        } catch (Exception e) {
+        	e.printStackTrace();
         }
     }
 }
