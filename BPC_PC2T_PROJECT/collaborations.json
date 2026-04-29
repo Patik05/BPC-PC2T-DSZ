@@ -1,0 +1,8 @@
+[
+{"staffId":1, "colleagueId":2, "level":"GOOD"}
+{"staffId":2, "colleagueId":1, "level":"GOOD"},
+{"staffId":2, "colleagueId":5, "level":"AVERAGE"}
+{"staffId":3, "colleagueId":4, "level":"BAD"}
+{"staffId":5, "colleagueId":2, "level":"AVERAGE"}
+{"staffId":4, "colleagueId":3, "level":"BAD"}
+]
