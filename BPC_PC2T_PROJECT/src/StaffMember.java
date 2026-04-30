@@ -23,7 +23,6 @@ public abstract class StaffMember {
     public String getSurname() { return surname; }
 
     public void addCollaboration(int colleagueId, Cooperationlevel level){
-        collaborations.add(new Collaboration(colleagueId, level));
         collaborations.removeIf(c -> c.getColleagueId() == colleagueId);
         this.collaborations.add(new Collaboration(colleagueId, level));
     }
