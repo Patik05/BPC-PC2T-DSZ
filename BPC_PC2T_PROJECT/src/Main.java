@@ -177,22 +177,17 @@ public class Main {
         
         try (FileWriter writer = new FileWriter("collaborations.json")) {
             writer.write("[\n");
-            
-        int posledniIndex = -1;
-        for (int i = 0; i < employees.size(); i++) {
-            	String collabJson = employees.get(i).collaborationToJson();
+        	List<String> allCollabs = new ArrayList<>();
+        	for(Specialist s : employees) {
+        		String cJson = s.collaborationToJson();
+        		if(!cJson.isEmpty()) {
+        			allCollabs.add(cJson);
+        		}
+        	}
             	
-                if (!collabJson.isEmpty()) {
-                	writer.write(collabJson);
-                }
-                if (i < posledniIndex) {
-                    writer.write(",\n");
-                } else {
-                    writer.write("\n");
-                }
-            }
+            writer.write(String.join(", \n", allCollabs));
             writer.write("]");
-        } catch (IOException e) {
+         } catch (IOException e) {
             e.printStackTrace();
         }
         
@@ -212,15 +207,10 @@ public class Main {
                     String parsedName = line.split("\"name\":\"")[1].split("\"")[0];
                     String parsedSurname = line.split("\"surname\":\"")[1].split("\"")[0];
                     int parsedYearOfBirth = Integer.parseInt(line.split("\"yearOfBirth\":")[1].split(",")[0]);
-                    int parsedCount = Integer.parseInt(line.split("\"collaborationCount\":")[1].split("}")[0].trim());
                     
                     int wg = parsedRole.equals("dataAnalyst") ? 1 : 2;
-                    Specialist spec =new Specialist(parsedId, wg, parsedName, parsedSurname, parsedYearOfBirth);
-                    
-                    for(int i = 0; i < parsedCount; i++ ) {
-                    	spec.addCollaboration(-i, Cooperationlevel.AVERAGE);
-                    }
-                    employees.add(spec);
+                    employees.add(new Specialist(parsedId, wg, parsedName, parsedSurname, parsedYearOfBirth));
+
                 }
             }
         } catch (Exception e) {
@@ -230,15 +220,16 @@ public class Main {
         if (!collabFile.exists()) {
             return;
         }
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(collabFile))) {
             String line;
             while ((line = reader.readLine()) != null) {
             	if (line.contains("\"staffId\":")) {
             		int parsedsId = Integer.parseInt(line.split("\"staffId\":")[1].split(",")[0].trim());
-            		int parsedcId = Integer.parseInt(line.split("\"colegueIdId\":")[1].split(",")[0].trim());
-            		String levelStr = line.split("\"level\":\"")[1].split(",")[0];
+            		int parsedcId = Integer.parseInt(line.split("\"colleagueId\":")[1].split(",")[0].trim());
+            		String levelStr = line.split("\"level\":\"")[1].split("\"")[0];
             		
             		Cooperationlevel level = Cooperationlevel.valueOf(levelStr);
+            		
             		for (StaffMember e: employees) {
             			if (e.getId()==parsedsId) {
             				e.addCollaboration(parsedcId, level);
