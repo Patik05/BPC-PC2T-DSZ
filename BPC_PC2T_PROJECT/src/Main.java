@@ -3,6 +3,7 @@ import java.util.*;
 
 public class Main {
     private static final String FILE_NAME = "data.json";
+    private static final String COLAB_FILE = "collaborations.json";
     static List<Specialist> employees = new ArrayList<>();
     static boolean running = true;
     static boolean unspecifiedChoice = false;
@@ -60,8 +61,8 @@ public class Main {
                         saveDataToFile();
                         break;
                     case "2":
-                        System.out.println("Enter first employee ID to add coleague: "); int firstId = sc.nextInt();
-                        System.out.println("Enter second employee ID to connect: "); int secondId = sc.nextInt();
+                        System.out.println("Enter first employee ID to add coleague: "); int staffId = sc.nextInt();
+                        System.out.println("Enter second employee ID to connect: "); int colleagueId = sc.nextInt();
                         System.out.println("Level (1-Good, 2-Avg, 3-Bad): "); int l = sc.nextInt();
                         sc.nextLine();
 
@@ -70,13 +71,13 @@ public class Main {
                         Specialist firstemployee = null;
                         Specialist secondemployee = null;
                         for(Specialist s: employees){
-                            if(s.getId() == firstId) firstemployee = s;
-                            if(s.getId() == secondId) secondemployee = s;
+                            if(s.getId() == staffId) firstemployee = s;
+                            if(s.getId() == colleagueId) secondemployee = s;
                         }
 
                         if(firstemployee != null && secondemployee != null){
-                            firstemployee.addCollaboration(secondId, lvl);
-                            secondemployee.addCollaboration(firstId, lvl);
+                            firstemployee.addCollaboration(colleagueId, lvl);
+                            secondemployee.addCollaboration(staffId, lvl);
                             System.out.println("Connection added.");
                             saveDataToFile();
                         }
@@ -131,6 +132,92 @@ public class Main {
                             System.out.println(s.toFormattedString());
                         }
                         break;
+                    case "7":
+                    	boolean inStats = true;
+                        while (inStats) {
+                        	System.out.println("\n---- Statistics ----");
+                        	System.out.println("1. Collaborations sorted by ID");
+                        	System.out.println("2. Collaborations sorted by staff name");
+                        	System.out.println("3. Collaborations sorted by relationship");
+                        	System.out.println("4. Collaborations for specific ID");
+                        	System.out.println("5. Back to main menu");
+                        	
+                        	if(unspecifiedChoice){
+                                System.out.println("Selected choice not available, try again!");
+                            }
+
+                            System.out.println("Enter your choice (simple numbers): ");
+                            String statSelection = sc.nextLine();
+                            
+                            unspecifiedChoice = false;
+                            List<String[]> allStats = new ArrayList<>();
+                            int targetId = -1;
+                            
+                        	switch (statSelection) {
+                        		case "1":
+                        			for(Specialist spec : employees) {
+                        				for (Collaboration col : spec.collaborations) {
+                        					allStats.add(prepareRow(spec, col, employees));
+                        				}
+                        			}
+                        			allStats.sort(Comparator.comparingInt(a -> Integer.parseInt(a[0])));
+                        			break;
+                        		case "2":
+                        			for(Specialist spec : employees) {
+                        				for (Collaboration col : spec.collaborations) {
+                        					allStats.add(prepareRow(spec, col, employees));
+                        				}
+                        			}
+                        			allStats.sort(Comparator.comparing(a -> a[1].toLowerCase()));
+                        			break;
+                        		case "3":
+                        			for(Specialist spec : employees) {
+                        				for (Collaboration col : spec.collaborations) {
+                        					allStats.add(prepareRow(spec, col, employees));
+                        				}
+                        			}
+                        			allStats.sort(Comparator.comparingInt(a -> Integer.parseInt(a[5])));
+                        			break;
+                        		case "4":{
+                        			System.out.println("Enter staffID: ");
+                        			String inputID = sc.nextLine();
+                        			targetId = Integer.parseInt(inputID);
+                        			boolean foundId = false;	
+                        			
+                        			for (Specialist s : employees) {
+                        				if (s.getId() == targetId) {
+                        					foundId = true;
+                        					break;
+                        				}
+                        			}
+                        			if (!foundId) {
+                        				System.out.println("Employee not found.");
+                        				continue;
+                        			}
+                        			for (Specialist spec : employees) {
+                                        for (Collaboration col : spec.collaborations) {
+                                            if (spec.getId() == targetId) {
+                                                allStats.add(prepareRow(spec, col, employees));
+                                            }
+                                        }
+                                    }
+                        			allStats.sort(Comparator.comparingInt(a -> Integer.parseInt(a[5])));
+                        		} break;
+                        		case "5":
+                        			inStats =false;
+                        			continue;
+                        	}
+                        	
+                        	
+                        	
+                        	if (allStats.isEmpty()) {
+                        		System.out.println("No collaborations found in the system.");
+                        	}else {
+                        		printTable(allStats, sc);
+                        	}         	
+                        }
+                
+                        break;
                     case "9":
                         running = false;
                         break;
@@ -160,7 +247,7 @@ public class Main {
     }
 
     private static void saveDataToFile() {
-        try (FileWriter writer = new FileWriter("data.json")) {
+        try (FileWriter writer = new FileWriter(FILE_NAME)) {
             writer.write("[\n");
             for (int i = 0; i < employees.size(); i++) {
                 writer.write("  " + employees.get(i).toJson());
@@ -175,7 +262,7 @@ public class Main {
             e.printStackTrace();
         }
         
-        try (FileWriter writer = new FileWriter("collaborations.json")) {
+        try (FileWriter writer = new FileWriter(COLAB_FILE)) {
             writer.write("[\n");
         	List<String> allCollabs = new ArrayList<>();
         	for(Specialist s : employees) {
@@ -194,7 +281,7 @@ public class Main {
     }
 
     private static void loadDataFromFile() {
-        File file = new File("data.json");
+        File file = new File(FILE_NAME);
         if (!file.exists()) {
             return;
         }
@@ -216,7 +303,7 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        File collabFile = new File("collaborations.json");
+        File collabFile = new File(COLAB_FILE);
         if (!collabFile.exists()) {
             return;
         }
@@ -241,5 +328,39 @@ public class Main {
         } catch (Exception e) {
         	e.printStackTrace();
         }
+    }
+   private static String[] prepareRow(Specialist spec, Collaboration col, List<Specialist> employees) {
+        String colleagueName = "Unknown";
+        for (Specialist s : employees) {
+            if (s.getId() == col.getColleagueId()) {
+                colleagueName = s.getName() + " " + s.getSurname();
+                break;
+            }
+        }
+        return new String[]{
+            String.valueOf(spec.getId()), 
+            spec.getName() + " " + spec.getSurname(), 
+            String.valueOf(col.getColleagueId()), 
+            colleagueName, 
+            col.getLevel().toString(),
+            String.valueOf(col.getLevel().getRiskValue())
+        };
+    }
+    private static void printTable(List<String[]> data, Scanner sc) {
+        System.out.println("\n" + "=".repeat(95));
+        System.out.printf("%-5s | %-20s | %-12s | %-20s | %-10s%n", "ID", "Staff Member", "Colleague ID", "Colleague Name", "Level");
+        System.out.println("-".repeat(95));
+        
+        int count = 0;
+        for (String[] row : data) {
+            System.out.printf("%-5s | %-20s | %-12s | %-20s | %-10s%n", row[0], row[1], row[2], row[3], row[4]);
+            count++;
+            if (count % 20 == 0 && count < data.size()) {
+                System.out.println("\n--- Press Enter to show more (" + count + "/" + data.size() + ") ---");
+                sc.nextLine();
+            }
+        }
+        System.out.println("=".repeat(95));
+        System.out.println("Total: " + data.size() + " records.");
     }
 }
