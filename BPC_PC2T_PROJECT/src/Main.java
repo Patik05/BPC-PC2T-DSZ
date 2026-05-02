@@ -218,6 +218,23 @@ public class Main {
                         }
                 
                         break;
+                    case "8":
+                        int dataAnalystCount = 0;
+                        int securitySpecialistCount = 0;
+
+                        for (Specialist s : employees) {
+                            if ("dataAnalyst".equals(s.getPosition())) {
+                                dataAnalystCount++;
+                            } else if ("securitySpecialist".equals(s.getPosition())) {
+                                securitySpecialistCount++;
+                            }
+                        }
+
+                        System.out.println("\n---- Employee Group Counts ----");
+                        System.out.println("Data Analysts (Group 1): " + dataAnalystCount);
+                        System.out.println("Security Specialists (Group 2): " + securitySpecialistCount);
+                        System.out.println("-------------------------------\n");
+                        break;
                     case "9":
                         running = false;
                         break;

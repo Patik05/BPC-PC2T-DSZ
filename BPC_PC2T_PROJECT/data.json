@@ -1,7 +1,0 @@
-[
-  {"id":1, "role":"dataAnalyst", "name":"Mark", "surname":"Sugar", "yearOfBirth":2000, "collaborationCount":1},
-  {"id":2, "role":"securitySpecialist", "name":"Ana", "surname":"Bell", "yearOfBirth":1993, "collaborationCount":2},
-  {"id":3, "role":"dataAnalyst", "name":"Johny", "surname":"English", "yearOfBirth":1990, "collaborationCount":1},
-  {"id":5, "role":"securitySpecialist", "name":"Peter", "surname":"Pan", "yearOfBirth":2004, "collaborationCount":1},
-  {"id":4, "role":"securitySpecialist", "name":"NVM", "surname":"NOW", "yearOfBirth":1956, "collaborationCount":1}
-]
