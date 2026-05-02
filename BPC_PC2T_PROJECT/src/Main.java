@@ -27,7 +27,7 @@ public class Main {
             System.out.println("7. Display statistics");
             System.out.println("8. Display the amount of employees in all groups");
             System.out.println("9. Exit the app");
-            System.out.println(" \n");
+            System.out.println("--------------------\n");
 
             if(unspecifiedChoice){
                 System.out.println("Selected choice not available, try again!");
@@ -40,8 +40,11 @@ public class Main {
             if(menuSelection != null){
                 switch (menuSelection) {
                     case "1":
-                        System.out.println("Enter the group for the new employee");
-                        System.out.println("1 - Data analytic, 2 - Security specialist");
+                        System.out.println("-- Enter the group for the new employee --");
+                        System.out.println("1 - Data analytic");
+                        System.out.println("2 - Security specialist");
+                        System.out.println("--------------------------------------\n");
+
                         workGroup = sc.nextInt();
                         sc.nextLine();
 
@@ -136,11 +139,12 @@ public class Main {
                     	boolean inStats = true;
                         while (inStats) {
                         	System.out.println("\n---- Statistics ----");
-                        	System.out.println("1. Collaborations sorted by ID");
-                        	System.out.println("2. Collaborations sorted by staff name");
-                        	System.out.println("3. Collaborations sorted by relationship");
-                        	System.out.println("4. Collaborations for specific ID");
-                        	System.out.println("5. Back to main menu");
+                        	System.out.println("1 - Collaborations sorted by ID");
+                        	System.out.println("2 - Collaborations sorted by staff name");
+                        	System.out.println("3 - Collaborations sorted by relationship");
+                        	System.out.println("4 - Collaborations for specific ID");
+                        	System.out.println("5 - Back to main menu");
+                            System.out.println("--------------------\n");
                         	
                         	if(unspecifiedChoice){
                                 System.out.println("Selected choice not available, try again!");
