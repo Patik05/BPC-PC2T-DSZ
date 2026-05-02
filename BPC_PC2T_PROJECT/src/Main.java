@@ -157,31 +157,24 @@ public class Main {
                             List<String[]> allStats = new ArrayList<>();
                             int targetId = -1;
                             
-                        	switch (statSelection) {
-                        		case "1":
-                        			for(Specialist spec : employees) {
-                        				for (Collaboration col : spec.collaborations) {
-                        					allStats.add(prepareRow(spec, col, employees));
-                        				}
-                        			}
-                        			allStats.sort(Comparator.comparingInt(a -> Integer.parseInt(a[0])));
-                        			break;
-                        		case "2":
-                        			for(Specialist spec : employees) {
-                        				for (Collaboration col : spec.collaborations) {
-                        					allStats.add(prepareRow(spec, col, employees));
-                        				}
-                        			}
-                        			allStats.sort(Comparator.comparing(a -> a[1].toLowerCase()));
-                        			break;
-                        		case "3":
-                        			for(Specialist spec : employees) {
-                        				for (Collaboration col : spec.collaborations) {
-                        					allStats.add(prepareRow(spec, col, employees));
-                        				}
-                        			}
-                        			allStats.sort(Comparator.comparingInt(a -> Integer.parseInt(a[5])));
-                        			break;
+                            if (!statSelection.equals("4") && !statSelection.equals("5")) {
+                                for(Specialist spec : employees) {
+                                    for (Collaboration col : spec.collaborations) {
+                                        allStats.add(prepareRow(spec, col, employees));
+                                    }
+                                }
+                            }
+
+                            switch (statSelection) {
+                                case "1":
+                                    allStats.sort(Comparator.comparingInt(a -> Integer.parseInt(a[0])));
+                                    break;
+                                case "2":
+                                    allStats.sort(Comparator.comparing(a -> a[1].toLowerCase()));
+                                    break;
+                                case "3":
+                                    allStats.sort(Comparator.comparingInt(a -> Integer.parseInt(a[5])));
+                                    break;
                         		case "4":{
                         			System.out.println("Enter staffID: ");
                         			String inputID = sc.nextLine();

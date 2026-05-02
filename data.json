@@ -1,7 +1,7 @@
 [
-  {"id":1, "role":"securitySpecialist", "name":"Jonas", "surname":"Hill", "yearOfBirth":1987, "collaborationCount":0},
-  {"id":2, "role":"dataAnalyst", "name":"Ana", "surname":"Bela", "yearOfBirth":2000, "collaborationCount":0},
-  {"id":3, "role":"securitySpecialist", "name":"John", "surname":"Darksouls", "yearOfBirth":1950, "collaborationCount":0},
-  {"id":4, "role":"securitySpecialist", "name":"Mr", "surname":"Bean", "yearOfBirth":1986, "collaborationCount":0},
+  {"id":1, "role":"securitySpecialist", "name":"Jonas", "surname":"Hill", "yearOfBirth":1987, "collaborationCount":3},
+  {"id":2, "role":"dataAnalyst", "name":"Ana", "surname":"Bela", "yearOfBirth":2000, "collaborationCount":2},
+  {"id":3, "role":"securitySpecialist", "name":"John", "surname":"Darksouls", "yearOfBirth":1950, "collaborationCount":1},
+  {"id":4, "role":"securitySpecialist", "name":"Mr", "surname":"Bean", "yearOfBirth":1986, "collaborationCount":2},
   {"id":5, "role":"dataAnalyst", "name":"Mihono", "surname":"Bourbon", "yearOfBirth":1990, "collaborationCount":0}
 ]
