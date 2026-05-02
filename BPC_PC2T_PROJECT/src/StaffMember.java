@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+
 public abstract class StaffMember {
     private int id;
     protected int workGroup;
@@ -30,6 +31,9 @@ public abstract class StaffMember {
     public void removeCollaboration(int colleagueId){
         this.collaborations.removeIf(c -> c.getColleagueId() == colleagueId);
     }
+
+    public int getWorkGroup() { return workGroup; }
+    public int getYearOfBirth() { return yearOfBirth; }
 
     public abstract String getPosition();
 

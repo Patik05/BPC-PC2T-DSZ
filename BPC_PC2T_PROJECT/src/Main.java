@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.*;
+import java.sql.*;
 
 public class Main {
     private static final String FILE_NAME = "data.json";
@@ -13,7 +14,10 @@ public class Main {
     private static String name, surname;
 
     public static void main(String[] args) {
-        loadDataFromFile();
+        if (!loadDataFromDatabase()) {
+            System.out.println("--- SQL unavailable or empty. Falling back to JSON ---");
+            loadDataFromFile();
+        }
 
         while(running == true){
             ++loop;
@@ -354,6 +358,11 @@ public class Main {
                 sc.nextLine();
             }
         };
+
+        System.out.println("\nSaving session data...");
+        saveDataToFile();
+        saveDataToDatabase();
+        System.out.println("Complete, shutting off.");
     }
 
     private static int getNextAvailableId() {
@@ -490,4 +499,113 @@ public class Main {
         System.out.println("=".repeat(95));
         System.out.println("Total: " + data.size() + " records.");
     }
+
+private static final String DB_URL = "jdbc:sqlite:project_data.db";
+
+    private static void initializeDatabase() throws SQLException {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("CREATE TABLE IF NOT EXISTS specialists (" +
+                         "id INTEGER PRIMARY KEY, " +
+                         "workGroup INTEGER, " +
+                         "name TEXT, " +
+                         "surname TEXT, " +
+                         "yearOfBirth INTEGER)");
+            
+            stmt.execute("CREATE TABLE IF NOT EXISTS collaborations (" +
+                         "staffId INTEGER, " +
+                         "colleagueId INTEGER, " +
+                         "level TEXT, " +
+                         "PRIMARY KEY(staffId, colleagueId))");
+        }
+    }
+
+    private static boolean loadDataFromDatabase() {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            initializeDatabase();
+
+            try (Connection conn = DriverManager.getConnection(DB_URL);
+                 Statement stmt = conn.createStatement()) {
+
+                ResultSet rs = stmt.executeQuery("SELECT * FROM specialists");
+                boolean hasData = false;
+                
+                while (rs.next()) {
+                    hasData = true;
+                    int id = rs.getInt("id");
+                    int wg = rs.getInt("workGroup");
+                    String name = rs.getString("name");
+                    String surname = rs.getString("surname");
+                    int yob = rs.getInt("yearOfBirth");
+                    employees.add(new Specialist(id, wg, name, surname, yob));
+                }
+
+                if (!hasData) return false; 
+
+                ResultSet rsCollab = stmt.executeQuery("SELECT * FROM collaborations");
+                while (rsCollab.next()) {
+                    int sId = rsCollab.getInt("staffId");
+                    int cId = rsCollab.getInt("colleagueId");
+                    String lvlStr = rsCollab.getString("level");
+                    Cooperationlevel level = Cooperationlevel.valueOf(lvlStr);
+
+                    for (StaffMember e : employees) {
+                        if (e.getId() == sId) {
+                            e.addCollaboration(cId, level);
+                            break;
+                        }
+                    }
+                }
+                System.out.println("--- Data successfully loaded from SQLite Database ---");
+                return true;
+            }
+        } catch (Exception e) {
+            System.out.println("SQL ERROR: " + e.toString());
+            return false;
+        }
+    }
+
+    private static void saveDataToDatabase() {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            initializeDatabase();
+            
+            try (Connection conn = DriverManager.getConnection(DB_URL)) {
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.execute("DELETE FROM collaborations");
+                    stmt.execute("DELETE FROM specialists");
+                }
+
+                String insertSpec = "INSERT INTO specialists (id, workGroup, name, surname, yearOfBirth) VALUES (?, ?, ?, ?, ?)";
+                try (PreparedStatement pstmt = conn.prepareStatement(insertSpec)) {
+                    for (Specialist s : employees) {
+                        pstmt.setInt(1, s.getId());
+                        pstmt.setInt(2, s.getWorkGroup());
+                        pstmt.setString(3, s.getName());
+                        pstmt.setString(4, s.getSurname());
+                        pstmt.setInt(5, s.getYearOfBirth());
+                        pstmt.executeUpdate();
+                    }
+                }
+
+                String insertCollab = "INSERT INTO collaborations (staffId, colleagueId, level) VALUES (?, ?, ?)";
+                try (PreparedStatement pstmt = conn.prepareStatement(insertCollab)) {
+                    for (Specialist s : employees) {
+                        for (Collaboration c : s.collaborations) {
+                            pstmt.setInt(1, s.getId());
+                            pstmt.setInt(2, c.getColleagueId());
+                            pstmt.setString(3, c.getLevel().name());
+                            pstmt.executeUpdate();
+                        }
+                    }
+                }
+                System.out.println("--- Data successfully saved to SQLite Database ---");
+            }
+        } catch (Exception e) {
+            System.out.println("SQL ERROR: " + e.toString());
+            System.out.println("SQLite Save Skipped: Driver missing or database unavailable.");
+        }
+    }
+
 }
