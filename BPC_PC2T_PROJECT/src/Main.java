@@ -130,7 +130,8 @@ public class Main {
                             System.out.println("Employee not found.");
                         }
                         break;
-                    case "5": {
+                    case "5": 
+                    {
                         System.out.println("\n--- Available Employees ---");
                         System.out.println(StaffMember.getHeader());
                         for (Specialist s : employees) {
@@ -191,7 +192,7 @@ public class Main {
                                 }
 
                                 if (bestColleague != null) {
-                                    System.out.println("Collaborator with the most mutual connections is " + 
+                                    System.out.println("Skill Result: Collaborator with the most mutual connections is " + 
                                                        bestColleague.getName() + " " + bestColleague.getSurname() + 
                                                        " (ID: " + bestColleague.getId() + ") with " + maxMutuals + " mutuals.");
                                 } else {
@@ -199,7 +200,38 @@ public class Main {
                                 }
                             }
                         } else if ("securitySpecialist".equals(targetEmp.getPosition())) {
-                            targetEmp.executeSkill();
+                            int collabCount = targetEmp.collaborations.size();
+                            
+                            if (collabCount == 0) {
+                                System.out.println("Security Specialist " + targetEmp.getName() + " has no collaborations.");
+                                System.out.println("Risk Score: 100.00% (Safest)");
+                            } else {
+                                double totalRiskValue = 0;
+                                int badCount = 0;
+                                int avgCount = 0;
+
+                                for (Collaboration c : targetEmp.collaborations) {
+                                    int riskVal = c.getLevel().getRiskValue();
+                                    totalRiskValue += riskVal;
+                                    
+                                    if (riskVal == 2) avgCount++;
+                                    else if (riskVal == 3) badCount++;
+                                }
+
+                                double avgQuality = totalRiskValue / collabCount;
+                                
+                                double qualityPenalty = (avgQuality - 1.0) * 25.0; 
+                                double finalScore = 100.0 - qualityPenalty;
+                                
+                                if (finalScore < 0) finalScore = 0.0;
+
+                                System.out.println("\n--- Security Risk Evaluation ---");
+                                System.out.println("Target: " + targetEmp.getName() + " " + targetEmp.getSurname());
+                                System.out.println("Total Collaborators: " + collabCount);
+                                System.out.println("Collaboration Quality: " + badCount + " Bad, " + avgCount + " Average");
+                                System.out.printf("Calculated Risk Score: %.2f%%\n", finalScore);
+                                System.out.println("--------------------------------");
+                            }
                         }
                         break;
                     }
@@ -315,6 +347,11 @@ public class Main {
                         unspecifiedChoice=true;
                         break;
                 }
+            }
+
+            if (running && !unspecifiedChoice) {
+                System.out.println("\nPress Enter to continue...");
+                sc.nextLine();
             }
         };
     }
