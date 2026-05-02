@@ -92,6 +92,7 @@ public class Main {
                         List<Specialist> sortedForDisplay = new ArrayList<>(employees);
                         sortedForDisplay.sort((s1, s2) -> Integer.compare(s1.getId(), s2.getId()));
                         
+                        System.out.println(StaffMember.getHeader());
                         int maxId = 0;
                         for(Specialist s : sortedForDisplay) {
                             System.out.println(s.toFormattedString());
@@ -119,6 +120,7 @@ public class Main {
                         boolean found = false;
                         for(Specialist s : employees) {
                             if(s.getId() == searchId) {
+                                System.out.println(StaffMember.getHeader());
                                 System.out.println(s.toFormattedString());
                                 found = true;
                                 break;
@@ -128,9 +130,83 @@ public class Main {
                             System.out.println("Employee not found.");
                         }
                         break;
+                    case "5": {
+                        System.out.println("\n--- Available Employees ---");
+                        System.out.println(StaffMember.getHeader());
+                        for (Specialist s : employees) {
+                            System.out.println(s.toFormattedString());
+                        }
+                        
+                        System.out.println("Enter employee ID to trigger skill: ");
+                        int selectedId = sc.nextInt();
+                        sc.nextLine();
+
+                        Specialist targetEmp = null;
+                        for (Specialist s : employees) {
+                            if (s.getId() == selectedId) {
+                                targetEmp = s;
+                                break;
+                            }
+                        }
+
+                        if (targetEmp == null) {
+                            System.out.println("Employee not found.");
+                            break;
+                        }
+
+                        if ("dataAnalyst".equals(targetEmp.getPosition())) {
+                            List<Integer> targetCollabs = new ArrayList<>();
+                            for (Collaboration c : targetEmp.collaborations) {
+                                targetCollabs.add(c.getColleagueId());
+                            }
+
+                            if (targetCollabs.isEmpty()) {
+                                System.out.println("Data Analyst " + targetEmp.getName() + " has no collaborations.");
+                            } else {
+                                int maxMutuals = -1;
+                                Specialist bestColleague = null;
+
+                                for (int collabId : targetCollabs) {
+                                    Specialist colleague = null;
+                                    for (Specialist s : employees) {
+                                        if (s.getId() == collabId) {
+                                            colleague = s;
+                                            break;
+                                        }
+                                    }
+
+                                    if (colleague != null) {
+                                        int mutualCount = 0;
+                                        for (Collaboration cCollab : colleague.collaborations) {
+                                            if (targetCollabs.contains(cCollab.getColleagueId())) {
+                                                mutualCount++;
+                                            }
+                                        }
+
+                                        if (mutualCount > maxMutuals) {
+                                            maxMutuals = mutualCount;
+                                            bestColleague = colleague;
+                                        }
+                                    }
+                                }
+
+                                if (bestColleague != null) {
+                                    System.out.println("Collaborator with the most mutual connections is " + 
+                                                       bestColleague.getName() + " " + bestColleague.getSurname() + 
+                                                       " (ID: " + bestColleague.getId() + ") with " + maxMutuals + " mutuals.");
+                                } else {
+                                    System.out.println("Could not determine mutual collaborators.");
+                                }
+                            }
+                        } else if ("securitySpecialist".equals(targetEmp.getPosition())) {
+                            targetEmp.executeSkill();
+                        }
+                        break;
+                    }
                     case "6":
                         List<Specialist> sortedList = new ArrayList<>(employees);
                         sortedList.sort((s1, s2) -> s1.getSurname().compareToIgnoreCase(s2.getSurname()));
+                        System.out.println(StaffMember.getHeader());
                         for(Specialist s : sortedList) {
                             System.out.println(s.toFormattedString());
                         }

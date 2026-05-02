@@ -1,9 +1,15 @@
 [
 {"staffId":1, "colleagueId":2, "level":"AVERAGE"},
-{"staffId":1, "colleagueId":3, "level":"BAD"},
-{"staffId":1, "colleagueId":4, "level":"GOOD"}, 
+{"staffId":1, "colleagueId":4, "level":"GOOD"},
+{"staffId":1, "colleagueId":3, "level":"GOOD"},
+{"staffId":1, "colleagueId":5, "level":"GOOD"}, 
 {"staffId":2, "colleagueId":1, "level":"AVERAGE"},
-{"staffId":2, "colleagueId":4, "level":"AVERAGE"}, 
-{"staffId":3, "colleagueId":1, "level":"BAD"}, 
+{"staffId":2, "colleagueId":4, "level":"AVERAGE"},
+{"staffId":2, "colleagueId":5, "level":"GOOD"}, 
+{"staffId":3, "colleagueId":1, "level":"GOOD"},
+{"staffId":3, "colleagueId":5, "level":"GOOD"}, 
 {"staffId":4, "colleagueId":1, "level":"GOOD"},
-{"staffId":4, "colleagueId":2, "level":"AVERAGE"}]
+{"staffId":4, "colleagueId":2, "level":"AVERAGE"}, 
+{"staffId":5, "colleagueId":3, "level":"GOOD"},
+{"staffId":5, "colleagueId":1, "level":"GOOD"},
+{"staffId":5, "colleagueId":2, "level":"GOOD"}]

@@ -43,8 +43,16 @@ public abstract class StaffMember {
             "}";
     }
 
+    public static String getHeader() {
+            String header = String.format("| %-4s | %-15s | %-15s | %-10s | %-20s | %-14s |", 
+                    "ID", "Name", "Surname", "Year", "Position", "Collaborations");
+            String separator = "-".repeat(header.length());
+            return separator + "\n" + header + "\n" + separator;
+        }
+
     public String toFormattedString() {
-        return "| " + id + " | " + name + " | " + surname + " | " + yearOfBirth + " |" + collaborations.size() + " |";
+        return String.format("| %-4d | %-15s | %-15s | %-10d | %-20s | %-14d |", 
+                id, name, surname, yearOfBirth, getPosition(), collaborations.size());
     }
     
     public String collaborationToJson() {
