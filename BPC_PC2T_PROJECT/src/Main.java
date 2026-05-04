@@ -483,7 +483,7 @@ public class Main {
         };
     }
     private static void printTable(List<String[]> data, Scanner sc) {
-        System.out.println("\n" + "=".repeat(95));
+        System.out.println("\n" + "-".repeat(95));
         System.out.printf("%-5s | %-20s | %-12s | %-20s | %-10s%n", "ID", "Staff Member", "Colleague ID", "Colleague Name", "Level");
         System.out.println("-".repeat(95));
         
@@ -496,7 +496,7 @@ public class Main {
                 sc.nextLine();
             }
         }
-        System.out.println("=".repeat(95));
+        System.out.println("-".repeat(95));
         System.out.println("Total: " + data.size() + " records.");
     }
 
